@@ -6,40 +6,11 @@
     <title>BFG Stars Game</title>
     <script src="https://telegram.org"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1a1d24;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            user-select: none;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: #232730;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
+        body { font-family: Arial, sans-serif; background-color: #1a1d24; color: white; text-align: center; margin: 0; padding: 20px; user-select: none; }
+        .container { max-width: 400px; margin: 0 auto; background: #232730; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         h1 { color: #f3ba2f; margin-bottom: 5px; }
         .balance { font-size: 28px; font-weight: bold; margin: 15px 0; color: #4caf50; }
-        .stars-balance { font-size: 18px; color: #31b6ff; margin-bottom: 20px; }
-        .btn {
-            display: block;
-            width: 100%;
-            background: #f3ba2f;
-            color: #1a1d24;
-            border: none;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            transition: 0.2s;
-        }
+        .btn { display: block; width: 100%; background: #f3ba2f; color: #1a1d24; border: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
         .btn:active { transform: scale(0.98); }
         .btn-stars { background: #31b6ff; color: white; }
     </style>
@@ -49,56 +20,28 @@
 <div class="container">
     <h1>🚜 BFG STARS GAME</h1>
     <div class="balance">💰 Баланс: <span id="cash">0</span> $</div>
-    <div class="stars-balance">🌟 Машин в гараже: <span id="cars">0</span></div>
 
-    <button class="btn" onclick="farm()">🚜 ФАРМИТЬ БАБЛО</button>
-    <button class="btn" onclick="buyCar()">🚗 Купить тачку (500$)</button>
+    <button class="btn" onclick="farm()">🚜 ФАРМИТЬ БАБЛО (+10$)</button>
     <button class="btn btn-stars" onclick="buyStars()">🛒 Купить +10k$ за 1 🌟</button>
 </div>
 
 <script>
     let cash = 0;
-    let cars = 0;
-
-    // Безопасная инициализация Telegram
-    try {
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.expand();
-        }
-    } catch (e) {
-        console.log("Запущено вне Telegram");
-    }
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
     function farm() {
-        cash += Math.floor(Math.random() * 41) + 10; // Начисляем от 10 до 50$
+        cash += 10; // Визуально прибавляем 10$ на экране
         document.getElementById('cash').innerText = cash;
-    }
-
-    function buyCar() {
-        if (cash >= 500) {
-            cash -= 500;
-            cars += 1;
-            document.getElementById('cash').innerText = cash;
-            document.getElementById('cars').innerText = cars;
-            alert("🚗 Поздравляем с покупкой машины!");
-        } else {
-            alert("❌ Недостаточно денег! Нужно 500$.");
-        }
+        
+        // Отправляем сигнал клика в нашего Python-бота
+        tg.sendData("click_farm");
     }
 
     function buyStars() {
-        try {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.sendData("buy_10k_cash_via_stars");
-            } else {
-                alert("🌟 Запрос отправлен бота (доступно только внутри Telegram)");
-            }
-        } catch (e) {
-            alert("Ошибка связи с ботом");
-        }
+        tg.sendData("buy_10k_cash_via_stars");
     }
 </script>
 
 </body>
 </html>
-
