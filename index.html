@@ -57,15 +57,20 @@
 </div>
 
 <script>
-    // Инициализация Telegram WebApp
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // Развернуть на весь экран
-
     let cash = 0;
     let cars = 0;
 
+    // Безопасная инициализация Telegram
+    try {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.expand();
+        }
+    } catch (e) {
+        console.log("Запущено вне Telegram");
+    }
+
     function farm() {
-        cash += Math.floor(Math.random() * 41) + 10; // +10-50$
+        cash += Math.floor(Math.random() * 41) + 10; // Начисляем от 10 до 50$
         document.getElementById('cash').innerText = cash;
     }
 
@@ -82,10 +87,18 @@
     }
 
     function buyStars() {
-        // Отправляем команду нашему Python-боту выставить счет на Stars
-        tg.sendData("buy_10k_cash_via_stars");
+        try {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.sendData("buy_10k_cash_via_stars");
+            } else {
+                alert("🌟 Запрос отправлен бота (доступно только внутри Telegram)");
+            }
+        } catch (e) {
+            alert("Ошибка связи с ботом");
+        }
     }
 </script>
 
 </body>
 </html>
+
