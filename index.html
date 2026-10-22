@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BFG Stars Game</title>
+    <script src="https://telegram.org"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1d24;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            user-select: none;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #232730;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h1 { color: #f3ba2f; margin-bottom: 5px; }
+        .balance { font-size: 28px; font-weight: bold; margin: 15px 0; color: #4caf50; }
+        .stars-balance { font-size: 18px; color: #31b6ff; margin-bottom: 20px; }
+        .btn {
+            display: block;
+            width: 100%;
+            background: #f3ba2f;
+            color: #1a1d24;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-stars { background: #31b6ff; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚜 BFG STARS GAME</h1>
+    <div class="balance">💰 Баланс: <span id="cash">0</span> $</div>
+    <div class="stars-balance">🌟 Машин в гараже: <span id="cars">0</span></div>
+
+    <button class="btn" onclick="farm()">🚜 ФАРМИТЬ БАБЛО</button>
+    <button class="btn" onclick="buyCar()">🚗 Купить тачку (500$)</button>
+    <button class="btn btn-stars" onclick="buyStars()">🛒 Купить +10k$ за 1 🌟</button>
+</div>
+
+<script>
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Развернуть на весь экран
+
+    let cash = 0;
+    let cars = 0;
+
+    function farm() {
+        cash += Math.floor(Math.random() * 41) + 10; // +10-50$
+        document.getElementById('cash').innerText = cash;
+    }
+
+    function buyCar() {
+        if (cash >= 500) {
+            cash -= 500;
+            cars += 1;
+            document.getElementById('cash').innerText = cash;
+            document.getElementById('cars').innerText = cars;
+            alert("🚗 Поздравляем с покупкой машины!");
+        } else {
+            alert("❌ Недостаточно денег! Нужно 500$.");
+        }
+    }
+
+    function buyStars() {
+        // Отправляем команду нашему Python-боту выставить счет на Stars
+        tg.sendData("buy_10k_cash_via_stars");
+    }
+</script>
+
+</body>
+</html>
